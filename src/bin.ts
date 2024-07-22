@@ -382,6 +382,9 @@ export const deploy = async ({ yes, bucket, userAgent }: DeployArguments = {}) =
             `);
         }
         if (process.env.AFTER_DEPLOY_HOOK_URL) {
+            console.log(
+                chalk`{bold Notify newVersion deployed}: {blue.underline ${process.env.AFTER_DEPLOY_HOOK_URL}}`
+            );
             await fetch(process.env.AFTER_DEPLOY_HOOK_URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -389,6 +392,8 @@ export const deploy = async ({ yes, bucket, userAgent }: DeployArguments = {}) =
                     newVersion: new Date(),
                 }),
             });
+        } else {
+            console.log(chalk`{bold AFTER_DEPLOY_HOOK_URL is empty}`);
         }
     } catch (ex) {
         spinner.fail('Failed.');
